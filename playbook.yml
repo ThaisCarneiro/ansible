@@ -12,7 +12,7 @@
         create_home: no
 
     - name: teste
-      shell: ls /var/lib/awx/projects 
+      shell: pwd 
 
     - name: Copy bin node_exporter to /usr/local/bin
       copy:
