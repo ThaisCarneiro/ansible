@@ -11,6 +11,9 @@
         system: true
         create_home: no
 
+    - name: teste
+      shell: pwd 
+
     - name: Copy bin node_exporter to /usr/local/bin
       copy:
         src: node_exporter
