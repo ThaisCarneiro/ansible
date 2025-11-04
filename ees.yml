@@ -7,7 +7,7 @@
         url: "https://172.29.249.112/token?service=172.29.249.112&scope=repository:ee-minimal-rhel8:pull"
         method: GET
         user: admin
-        password: "{{ senha }}"
+        password: "redhat"
         force_basic_auth: yes
         return_content: yes
         status_code: 200
