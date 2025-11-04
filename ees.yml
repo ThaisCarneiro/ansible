@@ -51,3 +51,29 @@
     - name: Exibir tags disponíveis
       debug:
         msg: "{{ resultado_b.json.tags }}"
+
+
+- name: Consultar tags de uma imagem no Pulp
+  hosts: localhost
+  gather_facts: no
+  vars:
+    pulp_url: "https://172.29.249.112"
+    repo_version_href: "/pulp/api/v3/repositories/container/container/abc123/versions/1/"
+    username: "admin"
+    password: "redhat"
+  tasks:
+    - name: Obter lista de tags
+      uri:
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/?repository_version={{ repo_version_href }}"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      register: resultado_tags
+
+    - name: Exibir tags encontradas
+      debug:
+        msg: "{{ resultado_tags.json.results | map(attribute='tag') | list }}"
+
