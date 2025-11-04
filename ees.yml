@@ -1,0 +1,19 @@
+- name: Consultar tags de imagem no Private Automation Hub
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Obter lista de tags da imagem
+      uri:
+        url: "https://172.29.249.112/v2/ee-minimal-rhel8/tags/list"
+        method: GET
+        user: "admin"
+        password: "redhat"
+        force_basic_auth: yes
+        return_content: yes
+        status_code: 200
+        validate_certs: no  # Use 'yes' se o certificado for válido
+      register: resultado
+
+    - name: Exibir tags disponíveis
+      debug:
+        msg: "{{ resultado.json.tags }}"
