@@ -2,13 +2,24 @@
   hosts: localhost
   gather_facts: no
   tasks:
+    - name: Obter token Bearer
+      uri:
+        url: "https://172.29.249.112/token?service=172.29.249.112&scope=repository:ee-minimal-rhel8:pull"
+        method: GET
+        user: admin
+        password: "{{ senha }}"
+        force_basic_auth: yes
+        return_content: yes
+        status_code: 200
+        validate_certs: false
+      register: token_response
+
     - name: Obter lista de tags da imagem
       uri:
         url: "https://172.29.249.112/v2/ee-minimal-rhel8/tags/list"
         method: GET
-        user: "admin"
-        password: "redhat"
-        force_basic_auth: yes
+        headers:
+          Authorization: "Bearer {{ token_response.json.token }}"
         return_content: yes
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
