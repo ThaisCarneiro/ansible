@@ -1,6 +1,6 @@
 ---
 - name: Verificar atualizações disponíveis no Windows
-  hosts: windows
+  hosts: all
   gather_facts: no
   tasks:
     - name: Verificar atualizações disponíveis
