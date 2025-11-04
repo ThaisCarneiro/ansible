@@ -23,8 +23,31 @@
         return_content: yes
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
-      register: resultado
+      register: resultado_a
 
     - name: Exibir tags disponíveis
       debug:
-        msg: "{{ resultado.json.tags }}"
+        msg: "{{ resultado_a.json.tags }}"
+
+    - name: Ensure the image does not exist
+      infra.ah_configuration.ah_ee_image:
+        name: 172.29.249.135/de-minimal-rhel8:0.2
+        state: absent
+        ah_host: 172.29.249.112
+        ah_username: admin
+        ah_password: redhat
+
+    - name: Obter lista de tags da imagem
+      uri:
+        url: "https://172.29.249.112/v2/ee-minimal-rhel8/tags/list"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ token_response.json.token }}"
+        return_content: yes
+        status_code: 200
+        validate_certs: no  # Use 'yes' se o certificado for válido
+      register: resultado_b
+
+    - name: Exibir tags disponíveis
+      debug:
+        msg: "{{ resultado_b.json.tags }}"
