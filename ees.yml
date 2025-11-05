@@ -66,7 +66,31 @@
         force_basic_auth: yes
         return_content: yes
         validate_certs: false
-      register: resultado_tagsa
+
+      http://localhost:24817/pulp/api/v3/repositories/container/container-push/
+
+    - name: repositories/container/container-push/
+      uri:
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      ignore_errors: true
+
+    - name: repositories/container/container-push/<repo_uuid>/versions/
+      uri:
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/01971317-f01d-7e98-8c7a-7ca937e3affe/versions/"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      ignore_errors: true
+
 
     - name: content/container/tags/
       uri:
