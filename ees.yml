@@ -85,7 +85,7 @@
         validate_certs: false
       register: resultado_tagsb
 
-    - name: repositories/container/container/
+    - name: repositories/container/container-push/
       uri:
         url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/"
         method: GET
@@ -96,6 +96,17 @@
         validate_certs: false
       register: resultado_tagsc
 
+
+    - name: repositories/container/container-push/versions
+      uri:
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      register: resultado_tagsc
 
 
     - name: tag list by id
