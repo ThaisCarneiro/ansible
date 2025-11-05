@@ -67,7 +67,6 @@
         return_content: yes
         validate_certs: false
 
-      http://localhost:24817/pulp/api/v3/repositories/container/container-push/
 
     - name: repositories/container/container-push/
       uri:
