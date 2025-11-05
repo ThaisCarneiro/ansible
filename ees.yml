@@ -108,10 +108,9 @@
         validate_certs: false
       register: resultado_tagsc
 
-
-    - name: tag list by id
+    - name: tag list by version
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags?pulp_href__in=/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/"
+        url: "{{ pulp_url }}api/galaxy/pulp/api/v3/container/tags/?repository_version=/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/7/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
