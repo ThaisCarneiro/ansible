@@ -4,7 +4,8 @@
   tasks:
     - name: Obter token Bearer
       uri:
-        url: "https://172.29.249.112/token?service=172.29.249.112&scope=repository:ee-minimal-rhel8:pull"
+        url: "https://172.29.249.135/api/galaxy/v3/auth/token/"
+        #url: "https://172.29.249.112/token?"
         method: GET
         user: admin
         password: "redhat"
@@ -24,7 +25,6 @@
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
       register: resultado_a
-      when: 1 == 2
 
     - name: ah tags do ee
       uri:
@@ -36,7 +36,6 @@
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
       register: resultado_a
-      when: 1 == 2
 
     - name: Ensure the image does not exist
       infra.ah_configuration.ah_ee_image:
@@ -46,7 +45,6 @@
         ah_username: admin
         ah_password: redhat
       ignore_errors: true
-      when: 1 == 2
 
 - name: Consultar tags de uma imagem no Pulp
   hosts: localhost
