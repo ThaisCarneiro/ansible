@@ -14,9 +14,9 @@
         validate_certs: false
       register: token_response
 
-    - name: Obter lista de tags da imagem
+    - name: ah - lista de ees
       uri:
-        url: "https://172.29.249.112/v2/ee-minimal-rhel8/tags/list"
+        url: "https://172.29.249.112/v2/_catalog"
         method: GET
         headers:
           Authorization: "Bearer {{ token_response.json.token }}"
@@ -25,9 +25,16 @@
         validate_certs: no  # Use 'yes' se o certificado for válido
       register: resultado_a
 
-    - name: Exibir tags disponíveis
-      debug:
-        msg: "{{ resultado_a.json.tags }}"
+     - name: ah- tags do ee
+       uri:
+        url: "https://172.29.249.112/v2/de-minimal-rhel8/tags/list"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ token_response.json.token }}"
+        return_content: yes
+        status_code: 200
+        validate_certs: no  # Use 'yes' se o certificado for válido
+      register: resultado_a
 
     - name: Ensure the image does not exist
       infra.ah_configuration.ah_ee_image:
@@ -37,22 +44,7 @@
         ah_username: admin
         ah_password: redhat
       ignore_errors: true
-
-    - name: Obter lista de tags da imagem
-      uri:
-        url: "https://172.29.249.112/v2/ee-minimal-rhel8/tags/list"
-        method: GET
-        headers:
-          Authorization: "Bearer {{ token_response.json.token }}"
-        return_content: yes
-        status_code: 200
-        validate_certs: no  # Use 'yes' se o certificado for válido
-      register: resultado_b
-
-    - name: Exibir tags disponíveis
-      debug:
-        msg: "{{ resultado_b.json.tags }}"
-
+      when: 1 == 2
 
 - name: Consultar tags de uma imagem no Pulp
   hosts: localhost
@@ -63,9 +55,20 @@
     username: "admin"
     password: "redhat"
   tasks:
+    - name: repository_versions/
+      uri:
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repository_versions/"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      register: resultado_tagsa
+
     - name: content/container/tags/
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/"
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/content/container/tags/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
@@ -74,9 +77,9 @@
         validate_certs: false
       register: resultado_tagsa
       
-    - name: content/container/container/
+    - name: distributions/container/container/
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/distributions/container/container/"
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/distributions/container/container/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
@@ -85,7 +88,7 @@
         validate_certs: false
       register: resultado_tagsb
 
-    - name: repositories/container/container-push/
+    - name: /repositories/container/container-push/
       uri:
         url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/"
         method: GET
@@ -107,17 +110,9 @@
         return_content: yes
         validate_certs: false
       register: resultado_tagsc
+      ignore_errors: true
 
-    - name: tag list by version
-      uri:
-        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/container/tags/?repository_version=/api/galaxy/pulp/api/v3/repository_versions/0197131f-001b-7092-8a15-6b6c627dfd3f/"
-        method: GET
-        user: "{{ username }}"
-        password: "{{ password }}"
-        force_basic_auth: yes
-        return_content: yes
-        validate_certs: false
-      register: resultado_tagsb
+
 
    
 
