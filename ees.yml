@@ -24,6 +24,7 @@
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
       register: resultado_a
+      when: 1 == 2
 
     - name: ah tags do ee
       uri:
@@ -35,6 +36,7 @@
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
       register: resultado_a
+      when: 1 == 2
 
     - name: Ensure the image does not exist
       infra.ah_configuration.ah_ee_image:
