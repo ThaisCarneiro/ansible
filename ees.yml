@@ -85,17 +85,18 @@
         validate_certs: false
       register: resultado_tagsb
 
-    - name: tag list by repo
+    - name: repositories/container/container/
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags?repository_version=0197131f-001b-7092-8a15-6b6c627dfd3f"
+        url: "{{ pulp_url }}/pulp/api/v3/repositories/container/container/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
         force_basic_auth: yes
         return_content: yes
         validate_certs: false
-      register: resultado_tagsb
-      ignore_errors: true
+      register: resultado_tagsc
+
+
 
     - name: tag list by id
       uri:
