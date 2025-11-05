@@ -14,7 +14,7 @@
         validate_certs: false
       register: token_response
 
-    - name: ah - lista de ees
+    - name: ah lista de ees
       uri:
         url: "https://172.29.249.112/v2/_catalog"
         method: GET
@@ -25,8 +25,8 @@
         validate_certs: no  # Use 'yes' se o certificado for válido
       register: resultado_a
 
-     - name: ah- tags do ee
-       uri:
+    - name: ah tags do ee
+      uri:
         url: "https://172.29.249.112/v2/de-minimal-rhel8/tags/list"
         method: GET
         headers:
