@@ -87,7 +87,7 @@
 
     - name: tag list by repo
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/repositories/container/tags?repository_version=0197131f-001b-7092-8a15-6b6c627dfd3f"
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/?repository_version=0197131f-001b-7092-8a15-6b6c627dfd3f"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
