@@ -111,7 +111,7 @@
 
     - name: tag list by id
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags?pulp_id__in=0197131f-001b-7092-8a15-6b6c627dfd3f"
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags?pulp_href__in=/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
