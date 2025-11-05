@@ -72,8 +72,10 @@
         force_basic_auth: yes
         return_content: yes
         validate_certs: false
-      register: resultado_tags
+      register: resultado_tagsa
+      
     - name: content/container/tags/
+      uri:
         url: "{{ pulp_url }}/pulp/api/v3/distributions/container/container/"
         method: GET
         user: "{{ username }}"
@@ -81,7 +83,7 @@
         force_basic_auth: yes
         return_content: yes
         validate_certs: false
-      register: resultado_tags
+      register: resultado_tagsb
 
    
 
