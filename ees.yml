@@ -99,7 +99,8 @@
 
     - name: repositories/container/container-push/versions
       uri:
-        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/"
+        #url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/"
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/repository_versions/?repository=/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
