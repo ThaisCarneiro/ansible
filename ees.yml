@@ -63,9 +63,18 @@
     username: "admin"
     password: "redhat"
   tasks:
-    - name: Obter lista de tags
+    - name: content/container/tags/
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/repositories/container/container/ee-minimal-rhel8/versions/"
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      register: resultado_tags
+    - name: content/container/tags/
+        url: "{{ pulp_url }}/pulp/api/v3/distributions/container/container/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
@@ -74,7 +83,5 @@
         validate_certs: false
       register: resultado_tags
 
-    - name: Exibir tags encontradas
-      debug:
-        msg: "{{ resultado_tags.json.results | map(attribute='tag') | list }}"
+   
 
