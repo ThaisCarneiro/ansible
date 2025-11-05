@@ -74,7 +74,7 @@
         validate_certs: false
       register: resultado_tagsa
       
-    - name: content/container/tags/
+    - name: content/container/container/
       uri:
         url: "{{ pulp_url }}/pulp/api/v3/distributions/container/container/"
         method: GET
@@ -84,6 +84,19 @@
         return_content: yes
         validate_certs: false
       register: resultado_tagsb
+
+    - name: content/container/id/versions
+      uri:
+        url: "{{ pulp_url }}/pulp/api/v3/repositories/container/container/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      register: resultado_tagsb
+
+   
 
    
 
