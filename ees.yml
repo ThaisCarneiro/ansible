@@ -113,6 +113,21 @@
         validate_certs: false
       ignore_errors: true
 
+    - name: Patch a distribution to point to a specific repository version
+      uri:
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/distributions/container/container/0197131f-01b9-722f-acbc-571fc9ba6a3f/"
+        method: PATCH
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+        body_format: json
+        body:
+          repository_version: "/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/7/"
+      ignore_errors: true
+
+
     - name: distribution for container
       uri:
         url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/distributions/container/container/0197131f-01b9-722f-acbc-571fc9ba6a3f/"
