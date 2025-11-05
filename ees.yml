@@ -124,8 +124,11 @@
         validate_certs: false
         body_format: json
         body:
+          repository: null
           repository_version: "/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/7/"
       ignore_errors: true
+
+      #repository was: /api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/
 
 
     - name: distribution for container
