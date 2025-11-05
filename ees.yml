@@ -65,7 +65,7 @@
   tasks:
     - name: Obter lista de tags
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/?repository_version={{ repo_version_href }}"
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
