@@ -19,8 +19,6 @@
       uri:
         url: "https://172.29.249.112/v2/_catalog"
         method: GET
-        headers:
-          Authorization: "Bearer {{ token_response.json.token }}"
         return_content: yes
         status_code: 200
         validate_certs: no  # Use 'yes' se o certificado for válido
