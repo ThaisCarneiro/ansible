@@ -87,7 +87,18 @@
 
     - name: tag list by repo
       uri:
-        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags/?repository_version=0197131f-001b-7092-8a15-6b6c627dfd3f"
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags?repository_version=0197131f-001b-7092-8a15-6b6c627dfd3f"
+        method: GET
+        user: "{{ username }}"
+        password: "{{ password }}"
+        force_basic_auth: yes
+        return_content: yes
+        validate_certs: false
+      register: resultado_tagsb
+
+    - name: tag list by id
+      uri:
+        url: "{{ pulp_url }}/pulp/api/v3/content/container/tags?pulp_id__in=0197131f-001b-7092-8a15-6b6c627dfd3f"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
