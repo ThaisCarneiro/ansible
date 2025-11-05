@@ -95,6 +95,7 @@
         return_content: yes
         validate_certs: false
       register: resultado_tagsb
+      ignore_errors: true
 
     - name: tag list by id
       uri:
