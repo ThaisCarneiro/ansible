@@ -5,7 +5,7 @@
     - name: Obter token Bearer
       uri:
         url: "https://172.29.249.112/token?service=172.29.249.112&scope=registry:catalog:*"
-        method: POST
+        method: GET
         user: admin
         password: "redhat"
         force_basic_auth: yes
