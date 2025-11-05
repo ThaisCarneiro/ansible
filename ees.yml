@@ -110,7 +110,7 @@
 
     - name: tag list by version
       uri:
-        url: "{{ pulp_url }}api/galaxy/pulp/api/v3/container/tags/?repository_version=/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/7/"
+        url: "{{ pulp_url }}/api/galaxy/pulp/api/v3/container/tags/?repository_version=/api/galaxy/pulp/api/v3/repositories/container/container-push/0197131f-001b-7092-8a15-6b6c627dfd3f/versions/7/"
         method: GET
         user: "{{ username }}"
         password: "{{ password }}"
