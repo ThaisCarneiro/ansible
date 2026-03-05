@@ -1,0 +1,24 @@
+---
+- name: Playbook simples de debug de variaveis
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    # Definindo uma variavel simples
+    nome_servidor: "servidor-web-01"
+    
+    # Definindo uma lista
+    pacotes:
+      - nginx
+      - git
+      - curl
+
+  tasks:
+    - name: Debugar uma variavel simples (msg)
+      ansible.builtin.debug:
+        msg: "O nome do servidor e: {{ nome_servidor }}"
+
+    - name: Debugar uma lista
+      ansible.builtin.debug:
+        var: pacotes
