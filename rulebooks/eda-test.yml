@@ -1,0 +1,32 @@
+- name: Listen for events on a webhook
+  hosts: localhost
+  match_multiple_rules: true
+  sources:
+   # - name: Source event stream
+   #   ansible.eda.event_stream:
+   #     name: Splunk
+
+     - name: default webhook
+       eda.builtin.webhook:
+         host: 0.0.0.0
+         port: 5000
+  rules:
+  - name: Type conversion
+    condition: event.payload.severity is defined
+    actions:
+      - set_fact:
+        fact:
+          severity_int: "{{event.payload.severity | int}}"
+      - debug:
+          msg: "Severity is {{ fact.severity_int }}"
+
+  - name: Restart service on host
+    condition: fact.severity_int > 4
+    action:
+      run_job_template:
+        name: "Service Remediation"
+        organization: "Monitoring"
+        job_args:
+          extra_vars:
+            ansible_windows_hosts: "{{ win_host }}"
+            generic_service_name: "{{ service_name }}"
