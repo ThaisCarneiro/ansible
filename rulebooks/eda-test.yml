@@ -18,14 +18,14 @@
       - set_fact:
           fact:
             severity_int: "{{event.payload.severity | int}}"
-      - debug:
-          msg: "Severity is {{ event.payload.severity | int  }}"
+      #- debug:
+      #    msg: "Severity is {{ event.payload.severity | int  }}"
 
-  - name: Only debug
-    condition: fact.severity_int is defined
-    actions:
-      - debug:
-          msg: "Severity is {{ fact.severity_int | int  }}"
+  #- name: Only debug
+  #  condition: fact.severity_int is defined
+  #  actions:
+  #    - debug:
+  #        msg: "Severity is {{ fact.severity_int | int  }}"
 
   - name: Restart service on host
     condition: fact.severity_int > 4
