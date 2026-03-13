@@ -35,5 +35,5 @@
         organization: "Default"
         job_args:
           extra_vars:
-            ansible_window_hosts: "{{ win_host }}"
-            generic_service_name: "{{ service_name }}"
+            ansible_window_hosts: "{{ event.payload.win_host }}"
+            generic_service_name: "{{ event.payload.service_name }}"
