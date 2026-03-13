@@ -12,28 +12,41 @@
          port: 5000
          endpoint: double-action-test
   rules:
+
+  - name: Show full webhook event
+    condition: event.payload is defined
+    actions:
+      - print_event:
+          pretty: true
+      - debug:
+          var: event
+      - debug:
+          var: event.payload
+
   - name: Type conversion
     condition: event.payload.severity is defined
     actions:
       - set_fact:
           fact:
             severity_int: "{{event.payload.severity | int}}"
+            win_host: "{{ event.payload.win_host }}"
+            service_name: "{{ event.payload.service_name }}"
       #- debug:
       #    msg: "Severity is {{ event.payload.severity | int  }}"
 
-  - name: Only debug
-    condition: fact.severity_int is defined
-    actions:
-      - debug:
-          msg: "{{ event }}"
+#  - name: Only debug
+#    condition: fact.severity_int is defined
+#    actions:
+#      - debug:
+#          msg: "{{    }}"
 
   - name: Restart service on host
-    condition: fact.severity_int > 4
+    condition: severity_int > 4
     action:
       run_job_template:
         name: "Demo Job Template"
         organization: "Default"
         job_args:
           extra_vars:
-            ansible_window_hosts: "{{ event.payload.win_host }}"
-            generic_service_name: "{{ event.payload.service_name }}"
+            ansible_window_hosts: "{{ win_host }}"
+            generic_service_name: "{{ service_name }}"
