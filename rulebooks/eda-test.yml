@@ -48,5 +48,5 @@
         organization: "Default"
         job_args:
           extra_vars:
-            ansible_window_hosts: "{{ fact.win_host }}"
-            generic_service_name: "{{ fact.service_name }}"
+            ansible_window_hosts: "{{ facts.win_host }}"
+            generic_service_name: "{{ facts.service_name }}"
