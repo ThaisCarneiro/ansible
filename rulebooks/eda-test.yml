@@ -46,7 +46,7 @@
       run_job_template:
         name: "Demo Job Template"
         organization: "Default"
-        job_args:
-          extra_vars:
-            ansible_window_hosts: "{{ win_host }}"
-            generic_service_name: "{{ service_name }}"
+       # job_args:
+       #   extra_vars:
+       #     ansible_window_hosts: "{{ win_host }}"
+       #     generic_service_name: "{{ service_name }}"
