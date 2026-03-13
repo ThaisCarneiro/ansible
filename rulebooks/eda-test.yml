@@ -16,8 +16,8 @@
     condition: event.payload.severity is defined
     actions:
       - set_fact:
-        fact:
-          severity_int: "{{event.payload.severity | int}}"
+          fact:
+            severity_int: "{{event.payload.severity | int}}"
       - debug:
           msg: "Severity is {{ event.payload.severity | int  }}"
 
