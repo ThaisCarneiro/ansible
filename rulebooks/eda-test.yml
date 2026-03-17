@@ -31,9 +31,15 @@
             severity_int: "{{event.payload.severity | int}}"
             win_host: "{{ event.payload.win_host }}"
             service_name: "{{ event.payload.service_name }}"
-      - debug:
-          msg: "Severity is {{ severity_int | int  }}"
-
+#      - debug:
+#          msg: "Severity is {{ severity_int | int  }}"
+  - name: Debug saved fact
+    condition:
+      all:
+        - facts.saved << fact.severity_int is defined
+    action:
+      debug:
+        msg: "Saved severity is {{ facts.saved.severity_int }}"
 #  - name: Only debug
 #    condition: fact.severity_int is defined
 #    actions:
