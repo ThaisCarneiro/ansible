@@ -33,13 +33,11 @@
             service_name: "{{ event.payload.service_name }}"
 #      - debug:
 #          msg: "Severity is {{ severity_int | int  }}"
-  - name: Debug saved fact
-    condition:
-      all:
-        - facts.saved << fact.severity_int is defined
+  - name: Debug threshold match
+    condition: fact.severity_int > 4
     action:
       debug:
-        msg: "Saved severity is {{ facts.saved.severity_int }}"
+        msg: "severity_int is greater than 4"
 #  - name: Only debug
 #    condition: fact.severity_int is defined
 #    actions:
