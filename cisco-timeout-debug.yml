@@ -1,4 +1,4 @@
-- name: Diagnostico de sessao persistente IOS XR
+- name: Teste de quebra real de conectividade IOS XR
   hosts: all
   gather_facts: no
 
@@ -23,33 +23,37 @@
           - "ansible_network_cli_ssh_type={{ ansible_network_cli_ssh_type | default('__UNDEF__') }}"
 
   tasks:
+    - name: Abrir a sessao persistente
+      cisco.iosxr.iosxr_command:
+        commands:
+          - show version
+
+    - name: Aviso sobre a acao manual
+      ansible.builtin.debug:
+        msg:
+          - "Agora derrube a conectividade de management do XRv e deixe-a derrubada."
+          - "Metodo recomendado: pelo console do XR, faça shutdown da MgmtEth0/RP0/CPU0/0."
+          - "Nao religue a interface ate o playbook terminar."
+
+    - name: Janela para derrubar a conectividade
+      ansible.builtin.pause:
+        seconds: 90
+
     - block:
-        - name: Abrir a sessao persistente
-          cisco.iosxr.iosxr_command:
-            commands:
-              - show version
-          register: first_cmd
-
-        - name: Timestamp antes da pausa
-          ansible.builtin.debug:
-            msg: "Inicio da pausa UTC={{ now(utc=true) }}"
-
-        - name: Esperar 5 minutos
-          ansible.builtin.pause:
-            minutes: 5
-
-        - name: Timestamp depois da pausa
-          ansible.builtin.debug:
-            msg: "Fim da pausa UTC={{ now(utc=true) }}"
-
-        - name: Teste simples apos a pausa
+        - name: Teste simples apos a quebra
           cisco.iosxr.iosxr_command:
             commands:
               - show clock
+          vars:
+            ansible_command_timeout: 30
+            ansible_connect_timeout: 30
           register: second_cmd
 
-        - name: Coletar facts apos a pausa
+        - name: Coletar facts apos a quebra
           cisco.iosxr.iosxr_facts:
+          vars:
+            ansible_command_timeout: 30
+            ansible_connect_timeout: 30
           register: facts_out
 
         - name: Mostrar resultado resumido
@@ -57,7 +61,6 @@
             msg:
               - "second_cmd_ok={{ second_cmd is succeeded }}"
               - "facts_ok={{ facts_out is succeeded }}"
-              - "hostname={{ facts_out.ansible_facts.ansible_net_hostname | default('N/A') }}"
 
       rescue:
         - name: Mostrar falha capturada
