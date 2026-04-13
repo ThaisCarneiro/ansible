@@ -1,0 +1,65 @@
+- name: Diagnostico de sessao persistente IOS XR
+  hosts: all
+  gather_facts: no
+
+  pre_tasks:
+    - name: Mostrar env vars relevantes no controller
+      ansible.builtin.debug:
+        msg:
+          - "ENV ANSIBLE_TIMEOUT={{ lookup('ansible.builtin.env', 'ANSIBLE_TIMEOUT', default='__UNDEF__') }}"
+          - "ENV ANSIBLE_PERSISTENT_COMMAND_TIMEOUT={{ lookup('ansible.builtin.env', 'ANSIBLE_PERSISTENT_COMMAND_TIMEOUT', default='__UNDEF__') }}"
+          - "ENV ANSIBLE_PERSISTENT_CONNECT_TIMEOUT={{ lookup('ansible.builtin.env', 'ANSIBLE_PERSISTENT_CONNECT_TIMEOUT', default='__UNDEF__') }}"
+          - "ENV ANSIBLE_PERSISTENT_LOG_MESSAGES={{ lookup('ansible.builtin.env', 'ANSIBLE_PERSISTENT_LOG_MESSAGES', default='__UNDEF__') }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Mostrar vars efetivas do host
+      ansible.builtin.debug:
+        msg:
+          - "ansible_connection={{ ansible_connection | default('__UNDEF__') }}"
+          - "ansible_network_os={{ ansible_network_os | default('__UNDEF__') }}"
+          - "ansible_command_timeout={{ ansible_command_timeout | default('__UNDEF__') }}"
+          - "ansible_connect_timeout={{ ansible_connect_timeout | default('__UNDEF__') }}"
+          - "ansible_network_cli_ssh_type={{ ansible_network_cli_ssh_type | default('__UNDEF__') }}"
+
+  tasks:
+    - block:
+        - name: Abrir a sessao persistente
+          cisco.iosxr.iosxr_command:
+            commands:
+              - show version
+          register: first_cmd
+
+        - name: Timestamp antes da pausa
+          ansible.builtin.debug:
+            msg: "Inicio da pausa UTC={{ now(utc=true) }}"
+
+        - name: Esperar 5 minutos
+          ansible.builtin.pause:
+            minutes: 5
+
+        - name: Timestamp depois da pausa
+          ansible.builtin.debug:
+            msg: "Fim da pausa UTC={{ now(utc=true) }}"
+
+        - name: Teste simples apos a pausa
+          cisco.iosxr.iosxr_command:
+            commands:
+              - show clock
+          register: second_cmd
+
+        - name: Coletar facts apos a pausa
+          cisco.iosxr.iosxr_facts:
+          register: facts_out
+
+        - name: Mostrar resultado resumido
+          ansible.builtin.debug:
+            msg:
+              - "second_cmd_ok={{ second_cmd is succeeded }}"
+              - "facts_ok={{ facts_out is succeeded }}"
+              - "hostname={{ facts_out.ansible_facts.ansible_net_hostname | default('N/A') }}"
+
+      rescue:
+        - name: Mostrar falha capturada
+          ansible.builtin.debug:
+            var: ansible_failed_result
