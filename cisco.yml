@@ -1,0 +1,13 @@
+- name: Test IOS XR access
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Show version
+      cisco.iosxr.iosxr_command:
+        commands:
+          - show version
+      register: result
+
+    - name: Print output
+      debug:
+        var: result.stdout_lines
