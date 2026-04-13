@@ -1,5 +1,5 @@
-- name: Teste de quebra real de conectividade IOS XR
-  hosts: all
+- name: Teste E - tentar reproduzir SSH channel failure no IOS XR
+  hosts: iosxr
   gather_facts: no
 
   pre_tasks:
@@ -18,51 +18,65 @@
         msg:
           - "ansible_connection={{ ansible_connection | default('__UNDEF__') }}"
           - "ansible_network_os={{ ansible_network_os | default('__UNDEF__') }}"
-          - "ansible_command_timeout={{ ansible_command_timeout | default('__UNDEF__') }}"
-          - "ansible_connect_timeout={{ ansible_connect_timeout | default('__UNDEF__') }}"
           - "ansible_network_cli_ssh_type={{ ansible_network_cli_ssh_type | default('__UNDEF__') }}"
 
-  tasks:
     - name: Abrir a sessao persistente
       cisco.iosxr.iosxr_command:
         commands:
           - show version
+      register: open_session
 
-    - name: Aviso sobre a acao manual
+    - name: Mostrar horario inicial
+      ansible.builtin.debug:
+        msg: "Sessao aberta com sucesso. UTC={{ now(utc=true) }}"
+
+    - name: Janela curta para preparar a quebra
+      ansible.builtin.pause:
+        seconds: 20
+
+    - name: Aviso final antes do comando longo
       ansible.builtin.debug:
         msg:
-          - "Agora derrube a conectividade de management do XRv e deixe-a derrubada."
-          - "Metodo recomendado: pelo console do XR, faça shutdown da MgmtEth0/RP0/CPU0/0."
-          - "Nao religue a interface ate o playbook terminar."
+          - "O proximo passo vai executar um comando longo."
+          - "ASSIM QUE a task 'Executar comando longo' ficar em RUNNING no AAP, espere 5 a 10 segundos e provoque a quebra abrupta."
+          - "Metodo preferido: remover/desconectar o cabo entre o XRv management e o Cloud no GNS3."
+          - "Metodo alternativo: desligar o node XRv no GNS3."
+          - "Nao use 'shutdown' da interface neste teste, porque isso tende a virar command timeout e nao channel failure."
 
-    - name: Janela para derrubar a conectividade
-      ansible.builtin.pause:
-        seconds: 90
-
+  tasks:
     - block:
-        - name: Teste simples apos a quebra
+        - name: Executar comando longo
           cisco.iosxr.iosxr_command:
             commands:
-              - show clock
-          vars:
-            ansible_command_timeout: 30
-            ansible_connect_timeout: 30
-          register: second_cmd
+              - "ping 203.0.113.1 count 1000 timeout 2"
+          register: long_cmd
 
-        - name: Coletar facts apos a quebra
-          cisco.iosxr.iosxr_facts:
-          vars:
-            ansible_command_timeout: 30
-            ansible_connect_timeout: 30
-          register: facts_out
-
-        - name: Mostrar resultado resumido
+        - name: Mostrar saida do comando longo se ele terminar
           ansible.builtin.debug:
-            msg:
-              - "second_cmd_ok={{ second_cmd is succeeded }}"
-              - "facts_ok={{ facts_out is succeeded }}"
+            var: long_cmd
+
+        - name: Tentar facts apos o comando longo
+          cisco.iosxr.iosxr_facts:
+          register: facts_after_long_cmd
+
+        - name: Mostrar facts apos o comando longo
+          ansible.builtin.debug:
+            var: facts_after_long_cmd
 
       rescue:
-        - name: Mostrar falha capturada
+        - name: Mostrar falha capturada do comando longo
           ansible.builtin.debug:
             var: ansible_failed_result
+
+        - name: Tentar facts apos a falha
+          cisco.iosxr.iosxr_facts:
+          register: facts_after_failure
+          ignore_errors: true
+
+        - name: Mostrar resultado do facts apos a falha
+          ansible.builtin.debug:
+            var: facts_after_failure
+
+        - name: Mostrar horario final da falha
+          ansible.builtin.debug:
+            msg: "Falha capturada. UTC={{ now(utc=true) }}"
