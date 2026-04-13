@@ -1,5 +1,5 @@
 - name: Teste E - tentar reproduzir SSH channel failure no IOS XR
-  hosts: iosxr
+  hosts: all
   gather_facts: no
 
   pre_tasks:
