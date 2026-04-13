@@ -1,0 +1,18 @@
+- name: Simular timeout no IOS XR
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Mostrar timeouts ativos
+      ansible.builtin.debug:
+        msg:
+          - "ANSIBLE_PERSISTENT_COMMAND_TIMEOUT={{ lookup('ansible.builtin.env', 'ANSIBLE_PERSISTENT_COMMAND_TIMEOUT', default='__UNDEF__') }}"
+          - "ANSIBLE_PERSISTENT_CONNECT_TIMEOUT={{ lookup('ansible.builtin.env', 'ANSIBLE_PERSISTENT_CONNECT_TIMEOUT', default='__UNDEF__') }}"
+      run_once: true
+
+    - name: Rodar comando propositalmente com timeout baixo
+      cisco.iosxr.iosxr_command:
+        commands:
+          - "ping 203.0.113.1 count 100 timeout 2"
+      vars:
+        ansible_command_timeout: 5
