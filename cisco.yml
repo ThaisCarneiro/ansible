@@ -20,3 +20,7 @@
     - name: Exibir ambiente completo
       ansible.builtin.debug:
         var: ee_env.stdout_lines
+
+    - name: Simular espera de 5 minutos
+      ansible.builtin.pause:
+        minutes: 5
