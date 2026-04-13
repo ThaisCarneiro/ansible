@@ -11,3 +11,12 @@
     - name: Print output
       debug:
         var: result.stdout_lines
+
+    - name: Capturar todas as variáveis de ambiente do job
+      ansible.builtin.command: env
+      delegate_to: localhost
+      register: ee_env
+
+    - name: Exibir ambiente completo
+      ansible.builtin.debug:
+        var: ee_env.stdout_lines
